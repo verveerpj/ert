@@ -156,7 +156,7 @@ def _add_numerical_data(
             raise ert3.exceptions.StorageError(response.text)
 
         meta_response = requests.put(
-            url=f"{record_url}/metadata",
+            url=f"{record_url}/userdata",
             params={"realization_index": idx},
             json=metadata.dict(),
         )
@@ -200,7 +200,7 @@ def _response2record(
 
 def _get_numerical_metadata(ensemble_id: str, record_name: str) -> _NumericalMetaData:
     response = requests.get(
-        url=f"{_STORAGE_URL}/ensembles/{ensemble_id}/records/{record_name}/metadata",
+        url=f"{_STORAGE_URL}/ensembles/{ensemble_id}/records/{record_name}/userdata",
         params={"realization_index": 0},  # This assumes there is a realization 0
     )
 
