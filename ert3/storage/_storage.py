@@ -38,7 +38,7 @@ def _get_experiment_by_name(experiment_name: str) -> Dict[str, Any]:
 
 def init(*, workspace: Path) -> None:
     response = requests.get(url=f"{_STORAGE_URL}/experiments")
-    experiment_names = {exp["name"]: exp["ensembles"] for exp in response.json()}
+    experiment_names = {exp["name"]: exp["ensemble_ids"] for exp in response.json()}
 
     for special_key in _SPECIAL_KEYS:
         if f"{workspace}.{special_key}" in experiment_names:
@@ -137,7 +137,7 @@ def _add_numerical_data(
         record_type=_get_record_type(ensemble_record),
     )
 
-    ensemble_id = experiment["ensembles"][0]  # currently just one ens per exp
+    ensemble_id = experiment["ensemble_ids"][0]  # currently just one ens per exp
     record_url = f"{_STORAGE_URL}/ensembles/{ensemble_id}/records/{record_name}"
 
     for idx, record in enumerate(ensemble_record.records):
@@ -224,7 +224,7 @@ def _get_numerical_data(
             f"Cannot get {record_name} data, no experiment named: {experiment_name}"
         )
 
-    ensemble_id = experiment["ensembles"][0]  # currently just one ens per exp
+    ensemble_id = experiment["ensemble_ids"][0]  # currently just one ens per exp
     metadata = _get_numerical_metadata(ensemble_id, record_name)
 
     records = []
@@ -289,7 +289,7 @@ def get_ensemble_record_names(
             f"Cannot get record names of non-existing experiment: {experiment_name}"
         )
 
-    ensemble_id = experiment["ensembles"][0]  # currently just one ens per exp
+    ensemble_id = experiment["ensemble_ids"][0]  # currently just one ens per exp
     response = requests.get(url=f"{_STORAGE_URL}/ensembles/{ensemble_id}/records")
     if response.status_code != 200:
         raise ert3.exceptions.StorageError(response.text)
@@ -306,7 +306,7 @@ def get_experiment_parameters(
             f"Cannot get parameters from non-existing experiment: {experiment_name}"
         )
 
-    ensemble_id = experiment["ensembles"][0]  # currently just one ens per exp
+    ensemble_id = experiment["ensemble_ids"][0]  # currently just one ens per exp
     response = requests.get(url=f"{_STORAGE_URL}/ensembles/{ensemble_id}/parameters")
     if response.status_code != 200:
         raise ert3.exceptions.StorageError(response.text)
